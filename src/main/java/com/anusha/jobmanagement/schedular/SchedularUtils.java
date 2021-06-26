@@ -1,5 +1,6 @@
 package com.anusha.jobmanagement.schedular;
 
+import com.anusha.jobmanagement.model.ScheduledJobInfo;
 import com.anusha.jobmanagement.model.ScheduledJobResponse;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ public class SchedularUtils {
     @Autowired
     private Scheduler scheduler;
 
-    public JobDetail buildJobDetail(JobDataMap jobDataMap) {
-        return JobBuilder.newJob((EmailJob.class))
+    public JobDetail buildJobDetail(JobDataMap jobDataMap, Class<? extends Job>jobClass) {
+        return JobBuilder.newJob((jobClass))
                 .withIdentity(UUID.randomUUID().toString(), "scheduled-jobs")
                 .withDescription("Send Job")
                 .usingJobData(jobDataMap)
@@ -22,13 +23,14 @@ public class SchedularUtils {
                 .build();
     }
 
-    public Trigger buildJobTrigger(JobDetail jobDetail, ZonedDateTime startAt) {
+    public Trigger buildJobTrigger(JobDetail jobDetail, ZonedDateTime startAt, ScheduledJobInfo job) {
         return TriggerBuilder.newTrigger()
                 .forJob(jobDetail)
                 .withIdentity(jobDetail.getKey().getName(), "job trigger")
                 .withDescription("Send Job Trigger")
                 .startAt(Date.from(startAt.toInstant()))
-                .withSchedule(SimpleScheduleBuilder.simpleSchedule().withMisfireHandlingInstructionFireNow())
+                .withSchedule(SimpleScheduleBuilder.simpleSchedule().withRepeatCount(job.getRepeatCount())
+                .withIntervalInMinutes(job.getIntervalInMinutes()).withMisfireHandlingInstructionFireNow())
                 .build();
     }
 }
