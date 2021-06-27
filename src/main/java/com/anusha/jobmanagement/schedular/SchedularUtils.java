@@ -24,8 +24,12 @@ public class SchedularUtils {
     }
 
     public Trigger buildJobTrigger(JobDetail jobDetail, ZonedDateTime startAt, ScheduledJobInfo job) {
+        if(job.getPriority() == null){
+            job.setPriority(5);
+        }
         return TriggerBuilder.newTrigger()
                 .forJob(jobDetail)
+                .withPriority(job.getPriority())
                 .withIdentity(jobDetail.getKey().getName(), "job trigger")
                 .withDescription("Send Job Trigger")
                 .startAt(Date.from(startAt.toInstant()))

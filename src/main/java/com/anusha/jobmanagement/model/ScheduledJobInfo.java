@@ -7,12 +7,13 @@ public class ScheduledJobInfo {
         private Integer intervalInMinutes ;
         @NotEmpty
         private Integer repeatCount;
+        private Integer priority;
 
         public Integer getIntervalInMinutes() {
                 return intervalInMinutes;
         }
 
-        public void getIntervalInMinutes(Integer intervalInMinutes) {
+        public void setIntervalInMinutes(Integer intervalInMinutes) {
                 this.intervalInMinutes = intervalInMinutes;
         }
 
@@ -23,4 +24,8 @@ public class ScheduledJobInfo {
         public void setRepeatCount(Integer repeatCount) {
                 this.repeatCount = repeatCount;
         }
+
+        public Integer getPriority() { return priority; }
+
+        public void setPriority(Integer priority) { this.priority = priority; }
 }

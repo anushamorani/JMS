@@ -1,6 +1,6 @@
 package com.anusha.jobmanagement.service;
 
-import com.anusha.jobmanagement.model.Email;
+import com.anusha.jobmanagement.model.Employee;
 import com.anusha.jobmanagement.model.ScheduledJobInfo;
 import com.anusha.jobmanagement.model.ScheduledJobResponse;
 import com.anusha.jobmanagement.schedular.EmailJob;
@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class JobServiceImpl implements  JobService {
@@ -22,16 +20,16 @@ public class JobServiceImpl implements  JobService {
     SchedularUtils schedularUtils = new SchedularUtils();
 
     @Override
-    public ScheduledJobResponse sendYourDailyProgressReminder(Email email) throws SchedulerException {
+    public ScheduledJobResponse sendYourDailyProgressReminder(Employee employee) throws SchedulerException {
         try {
             ScheduledJobInfo job = new ScheduledJobInfo();
-            job.setRepeatCount(2);
-            job.getIntervalInMinutes(1);
+            job.setRepeatCount(1);
+            job.setIntervalInMinutes(1);
             JobDataMap jobDataMap = new JobDataMap();
 
-            jobDataMap.put("email", email.getEmail());
-            jobDataMap.put("subject", email.getSubject());
-            jobDataMap.put("body", email.getBody());
+            jobDataMap.put("email", employee.getEmployeeEmail());
+            jobDataMap.put("subject", "hey");
+            jobDataMap.put("body", "go away");
 
             JobDetail jobDetail = schedularUtils.buildJobDetail(jobDataMap, EmailJob.class);
             Trigger trigger = schedularUtils.buildJobTrigger(jobDetail, ZonedDateTime.now(),job);
@@ -46,20 +44,19 @@ public class JobServiceImpl implements  JobService {
             return scheduledJobResponse;
         }
     }
-
-
 
     @Override
-    public ScheduledJobResponse drinkWaterReminder(Email email) throws SchedulerException {
+    public ScheduledJobResponse dbIsHackedAlert(Employee employee) throws SchedulerException {
         try {
             JobDataMap jobDataMap = new JobDataMap();
             ScheduledJobInfo job = new ScheduledJobInfo();
-            job.setRepeatCount(2);
-            job.getIntervalInMinutes(1);
+            job.setRepeatCount(0);
+            job.setIntervalInMinutes(0);
+            job.setPriority(10);
 
-            jobDataMap.put("email", email.getEmail());
-            jobDataMap.put("subject", email.getSubject());
-            jobDataMap.put("body", email.getBody());
+            jobDataMap.put("email", employee.getEmployeeEmail());
+            jobDataMap.put("subject", "hey");
+            jobDataMap.put("body", "lol");
 
             JobDetail jobDetail = schedularUtils.buildJobDetail(jobDataMap, EmailJob.class);
             Trigger trigger = schedularUtils.buildJobTrigger(jobDetail, ZonedDateTime.now(),job);
@@ -74,4 +71,8 @@ public class JobServiceImpl implements  JobService {
             return scheduledJobResponse;
         }
     }
+
+//    private ScheduledJobInfo setJobInfo (){
+//
+//    }
 }

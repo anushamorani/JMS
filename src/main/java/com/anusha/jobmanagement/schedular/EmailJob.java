@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 @Component
 public class EmailJob extends QuartzJobBean {
@@ -50,6 +51,7 @@ public class EmailJob extends QuartzJobBean {
             messageHelper.setTo(toEmail);
 
             mailSender.send(message);
+            logger.info("Email Sent"+ new Date());
         } catch (MessagingException ex) {
             logger.error("Failed to send email to {}", toEmail);
         }
