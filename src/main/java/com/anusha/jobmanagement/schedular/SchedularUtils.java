@@ -1,7 +1,6 @@
 package com.anusha.jobmanagement.schedular;
 
 import com.anusha.jobmanagement.model.ScheduledJobInfo;
-import com.anusha.jobmanagement.model.ScheduledJobResponse;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,7 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.UUID;
 
-public class SchedularUtils {
+public final class SchedularUtils {
 
     @Autowired
     private Scheduler scheduler;
@@ -24,6 +23,17 @@ public class SchedularUtils {
     }
 
     public Trigger buildJobTrigger(JobDetail jobDetail, ZonedDateTime startAt, ScheduledJobInfo job) {
+
+        SimpleScheduleBuilder builder = SimpleScheduleBuilder.simpleSchedule()
+                                        .withIntervalInMinutes(job.getIntervalInMinutes())
+                                        .withMisfireHandlingInstructionFireNow();
+
+        if (job.getRunForever() != null && job.getRunForever()) {
+            builder = builder.repeatForever();
+        } else if( job.getRepeatCount() != null)
+        {
+            builder = builder.withRepeatCount(job.getRepeatCount() - 1);
+        }
         if(job.getPriority() == null){
             job.setPriority(5);
         }
@@ -33,8 +43,7 @@ public class SchedularUtils {
                 .withIdentity(jobDetail.getKey().getName(), "job trigger")
                 .withDescription("Send Job Trigger")
                 .startAt(Date.from(startAt.toInstant()))
-                .withSchedule(SimpleScheduleBuilder.simpleSchedule().withRepeatCount(job.getRepeatCount())
-                .withIntervalInMinutes(job.getIntervalInMinutes()).withMisfireHandlingInstructionFireNow())
+                .withSchedule(builder)
                 .build();
     }
 }

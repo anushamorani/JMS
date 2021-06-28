@@ -1,15 +1,11 @@
 package com.anusha.jobmanagement.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.io.Serializable;
 
 @Entity
-public class Employee {
+public class Employee implements Serializable {
 
     @Id
     @GeneratedValue
@@ -20,13 +16,6 @@ public class Employee {
     @NotEmpty
     @Column(name = "EMPLOYEE_EMAIL")
     private String employeeEmail;
-
-//    @NotEmpty
-//    private String subject;
-//
-//    @NotEmpty
-//    private String body;
-
 
     public long getEmployeeId() {
         return employeeId;
@@ -43,21 +32,4 @@ public class Employee {
     public void setEmployeeEmail(String employeeEmail) {
         this.employeeEmail = employeeEmail;
     }
-
-//    public String getSubject() {
-//        return subject;
-//    }
-//
-//    public void setSubject(String subject) {
-//        this.subject = subject;
-//    }
-//
-//    public String getBody() {
-//        return body;
-//    }
-//
-//    public void setBody(String body) {
-//        this.body = body;
-//    }
-
 }

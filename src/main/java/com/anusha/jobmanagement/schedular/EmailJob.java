@@ -43,13 +43,11 @@ public class EmailJob extends QuartzJobBean {
         try {
             logger.info("Sending Email to {}", toEmail);
             MimeMessage message = mailSender.createMimeMessage();
-
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, StandardCharsets.UTF_8.toString());
             messageHelper.setSubject(subject);
             messageHelper.setText(body, true);
             messageHelper.setFrom(fromEmail);
             messageHelper.setTo(toEmail);
-
             mailSender.send(message);
             logger.info("Email Sent"+ new Date());
         } catch (MessagingException ex) {
